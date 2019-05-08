@@ -106,7 +106,7 @@ describe("PROTOTYPES", () => {
       }])
     })
   }), describe("Cake Prompts", () => {
-    it.skip("stockPerCake", () => {
+    it("stockPerCake", () => {
       const e = cakePrompts.stockPerCake();
       expect(e).to.deep.equal([{
         flavor: "dark chocolate",
@@ -128,7 +128,7 @@ describe("PROTOTYPES", () => {
         inStock: 0
       }])
     });
-    it.skip("onlyInStock", () => {
+    it("onlyInStock", () => {
       const e = cakePrompts.onlyInStock();
       expect(e).to.deep.equal([{
         cakeFlavor: "dark chocolate",
@@ -156,11 +156,11 @@ describe("PROTOTYPES", () => {
         inStock: 21
       }])
     });
-    it.skip("totalInventory", () => {
+    it("totalInventory", () => {
       const e = cakePrompts.totalInventory();
       expect(e).to.deep.equal(59)
     });
-    it.skip("allToppings", () => {
+    it("allToppings", () => {
       const e = cakePrompts.allToppings();
       expect(e).to.deep.equal(["dutch process cocoa", "toasted sugar", "smoked sea salt", "berries", "edible flowers", "mint", "cranberry", "crystallized ginger"])
     });

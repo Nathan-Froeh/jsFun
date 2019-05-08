@@ -168,7 +168,6 @@ const modPrompts = {
     //   { mod: 4, studentsPerInstructor: 8 }
     // ] 
     let stuff = [...mods].map(mod => ({mod: mod.mod, studentsPerInstructor: mod.students / mod.instructors}));
-    console.log(mods);
     const result = stuff;
     return result;
 
@@ -203,8 +202,12 @@ const cakePrompts = {
     //    { flavor: 'yellow', inStock: 14 },
     //    ..etc
     // ]
+    // console.log(cakes[0]);
+    let cakesInStock = cakes.map(x => {
+      return ({flavor: x.cakeFlavor, inStock: x.inStock});
+    });
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = cakesInStock;
     return result;
 
     // Annotation:
@@ -232,7 +235,9 @@ const cakePrompts = {
     // ..etc
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let inStock = cakes.filter(x => x.inStock > 0);
+
+    const result = inStock;
     return result;
 
     // Annotation:
@@ -243,7 +248,11 @@ const cakePrompts = {
     // Return the total amount of cakes in stock e.g.
     // 59
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let inventory = cakes.reduce((acc, cur) => {
+      return acc = acc + cur.inStock;
+    }, 0);
+
+    const result = inventory;
     return result;
 
     // Annotation:
@@ -255,7 +264,14 @@ const cakePrompts = {
     // every cake in the dataset e.g.
     // ['dutch process cocoa', 'toasted sugar', 'smoked sea salt', 'berries', ..etc]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let toppings = cakes.reduce((acc, cur) => {
+      cur.toppings.map(x => {
+        !acc.includes(x) ? acc.push(x) : null;
+      });
+      return acc;
+    }, []);
+
+    const result = toppings;
     return result;
 
     // Annotation:
