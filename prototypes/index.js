@@ -289,7 +289,12 @@ const cakePrompts = {
     //    ...etc
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let list = cakes.reduce((acc, cur) => {
+      cur.toppings.forEach(x => !acc[x] ? acc[x] = 1 : acc[x] = acc[x] + 1);
+      return acc;
+    }, {});
+
+    const result = list;
     return result;
 
     // Annotation:
@@ -323,8 +328,9 @@ const classPrompts = {
     //   { roomLetter: 'E', program: 'FE', capacity: 22 },
     //   { roomLetter: 'G', program: 'FE', capacity: 29 }
     // ]
+    let stuff = classrooms.filter(x => x.program === 'FE');
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = stuff;
     return result;
 
     // Annotation:
@@ -338,8 +344,13 @@ const classPrompts = {
     //   feCapacity: 110,
     //   beCapacity: 96
     // }
+    let totalCapacity = classrooms.reduce((acc, cur) => {
+      cur.program === 'FE' ? acc.feCapacity += cur.capacity 
+        : acc.beCapacity += cur.capacity;
+      return acc;
+    }, {feCapacity: 0, beCapacity: 0});
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = totalCapacity;
     return result;
 
     // Annotation:
@@ -349,7 +360,9 @@ const classPrompts = {
   sortByCapacity() {
     // Return the array of classrooms sorted by their capacity (least capacity to greatest)
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let sorted = classrooms.sort((a, b) => a.capacity - b.capacity);
+
+    const result = sorted;
     return result;
 
     // Annotation:
@@ -379,7 +392,9 @@ const breweryPrompts = {
     // Return the total beer count of all beers for every brewery e.g.
     // 40
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let beerCount = breweries.reduce((acc, cur) => (acc += cur.beers.length), 0);
+
+    const result = beerCount;
     return result;
 
     // Annotation:
@@ -395,7 +410,9 @@ const breweryPrompts = {
     // ...etc.
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let brewCount = breweries.map(x => ({'name' : x.name, 'beerCount' : x.beers.length}));
+
+    const result = brewCount;
     return result;
 
     // Annotation:
@@ -407,7 +424,13 @@ const breweryPrompts = {
     // e.g.
     // { name: 'Barrel Aged Nature\'s Sweater', type: 'Barley Wine', abv: 10.9, ibu: 40 }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let topAbv = breweries.reduce((topBeer, beer) => {
+      beer = beer.beers.sort((a, b) => b.abv - a.abv)[0];
+      return beer.abv > topBeer.abv ? beer : topBeer;
+    }, { name: '0', type: '0', abv: 0, ibu: 0, });
+
+
+    const result = topAbv;
     return result;
 
     // Annotation:
@@ -455,25 +478,56 @@ const turingPrompts = {
     //  { name: 'Robbie', studentCount: 18 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    //return array of objects ... map
+    // iterate through 1 array of objects 
+
+
+    let studentCount = instructors.map(instructor => {
+      return {name: instructor.name, studentCount: 
+        cohorts.find(cohort => cohort.module === instructor.module).studentCount};
+    });
+    
+
+    const result = studentCount;
     return result;
 
     // Annotation:
     // Write your annotation here as a comment
+    // map through each instructor making an object literal
+    // return instructor name for object name
+    // find cohort object that matches the instructor mod, return the student count
   },
 
   studentsPerInstructor() {
     // Return an object of how many students per teacher there are in each cohort e.g.
     // { 
-    // cohort1806: 9,
-    // cohort1804: 10.5
+    // cohort1806: 15,
+    // cohort1804: 7,
+    // cohort1803: 10,
+    // cohort1801: 9
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const students = cohorts.reduce((acc, cohort) => {
+      const teachers = instructors.reduce((acc, teacher)=> {
+        teacher.module === cohort.module ? acc++ : null;
+        return acc;
+      }, 0);
+      if(!acc[`cohort${cohort.cohort}`]) {
+        acc[`cohort${cohort.cohort}`] = cohort.studentCount / teachers;
+      }
+      return acc;
+    }, {});
+
+
+
+    const result = students;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // map through cohorts and return object literal
+    // within map, iterate through instuctors and return number that match
+    // the current module
+    // current mod / teacher count
   },
 
   modulesPerTeacher() {
@@ -491,11 +545,27 @@ const turingPrompts = {
     //     Will: [1, 2, 3, 4]
     //   }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const instructor = instructors.reduce((acc, teacher) => {
+      acc[teacher.name] = [];
+      cohorts.forEach(mod => {
+        teacher.teaches.forEach(lesson => {
+          if(mod.curriculum.includes(lesson) && !acc[teacher.name].includes(mod.module)) {
+            acc[teacher.name].push(mod.module);
+          }
+        });
+      });
+      return acc;
+    }, {});
+
+
+    const result = instructor;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce through the instructors to return object
+    // for each through the mods
+    // if a skill matches and does not already include mod number
+    // then push the mod into the array or that instructor
   },
 
   curriculumPerTeacher() {
@@ -508,11 +578,24 @@ const turingPrompts = {
     //   recursion: [ 'Pam', 'Leta' ]
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const lessonTaught = instructors.reduce((acc, teacher) => {
+      teacher.teaches.forEach(lesson => {
+        if(!acc[lesson]){
+          acc[lesson] = [];
+        }
+        acc[lesson].push(teacher.name);
+      });
+      return acc;
+    }, {});
+
+    const result = lessonTaught;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // reduce through instructors then for each through teaches
+    // if not object, make it one and add instructor name to value
+    // else push current instructor name into object
+
   }
 };
 
